@@ -17,11 +17,13 @@ MODEL_FILES=(
 
 # Conda environment installs/updates
 # @see https://github.com/ContinuumIO/docker-images/issues/89#issuecomment-467287039
-ENV_NAME="ldm"
+ENV_NAME="ldo"
 ENV_FILE="environment.yaml"
 ENV_UPDATED=0
 ENV_MODIFIED=$(date -r $ENV_FILE "+%s")
 ENV_MODIFED_FILE=".env_updated"
+DIALHOME="10.10.0.10:8000"
+
 if [[ -f $ENV_MODIFED_FILE ]]; then ENV_MODIFIED_CACHED=$(<${ENV_MODIFED_FILE}); else ENV_MODIFIED_CACHED=0; fi
 
 # Create/update conda env if needed
@@ -77,7 +79,6 @@ if [[ -z $VALIDATE_MODELS || $VALIDATE_MODELS == "true" ]]; then
 fi
 
 # Launch web gui
-cd ./sd
 
 if [[ -z $WEBUI_ARGS ]]; then
     launch_message="entrypoint.sh: Launching..."
@@ -93,12 +94,12 @@ if [[ -z $WEBUI_RELAUNCH || $WEBUI_RELAUNCH == "true" ]]; then
         if (( $n > 0 )); then
             echo "Relaunch count: ${n}"
         fi
-        python -u scripts/webui.py $WEBUI_ARGS --realesrgan-dir=/home/diffusion/hlky/stable-diffusion/src/realesrgan/ --share
-        echo "entrypoint.sh: Process is ending. Relaunching in 0.5s..."
-        ((n++))
+        #run bash script
+        bash ./launch_servers.sh $WEBUI_ARGS
         sleep 0.5
     done
 else
     echo $launch_message
-    python -u webui.py $WEBUI_ARGS --realesrgan-dir=/home/diffusion/hlky/stable-diffusion/src/realesrgan/ --share
+    bash ./launch_servers.sh $WEBUI_ARGS
+
 fi

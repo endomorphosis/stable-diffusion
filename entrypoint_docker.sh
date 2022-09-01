@@ -14,6 +14,7 @@ MODEL_FILES=(
     'RealESRGAN_x4plus.pth ./src/realesrgan/experiments/pretrained_models https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth 4fa0d38905f75ac06eb49a7951b426670021be3018265fd191d2125df9d682f1'
     'RealESRGAN_x4plus_anime_6B.pth ./src/realesrgan/experiments/pretrained_models https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da'
 )
+NUM_GPUS = $(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
 
 # Conda environment installs/updates
 # @see https://github.com/ContinuumIO/docker-images/issues/89#issuecomment-467287039
@@ -22,6 +23,8 @@ ENV_FILE="/sd/environment.yaml"
 ENV_UPDATED=0
 ENV_MODIFIED=$(date -r $ENV_FILE "+%s")
 ENV_MODIFED_FILE="/sd/.env_updated"
+MIN_MEMORY=8000
+DEFAULT_PORT=7860
 if [[ -f $ENV_MODIFED_FILE ]]; then ENV_MODIFIED_CACHED=$(<${ENV_MODIFED_FILE}); else ENV_MODIFIED_CACHED=0; fi
 
 # Create/update conda env if needed
@@ -93,12 +96,12 @@ if [[ -z $WEBUI_RELAUNCH || $WEBUI_RELAUNCH == "true" ]]; then
         if (( $n > 0 )); then
             echo "Relaunch count: ${n}"
         fi
-        python -u scripts/webui.py $WEBUI_ARGS --realesrgan-dir=/home/diffusion/hlky/stable-diffusion/src/realesrgan/ --share
-        echo "/sd/entrypoint_docker.sh: Process is ending. Relaunching in 0.5s..."
-        ((n++))
+        #run bash script
+        bash ./launch_servers.sh $WEBUI_ARGS
         sleep 0.5
     done
 else
     echo $launch_message
-    python -u /sd/webui.py $WEBUI_ARGS --realesrgan-dir=/home/diffusion/hlky/stable-diffusion/src/realesrgan/ --share
+    bash ./launch_servers.sh $WEBUI_ARGS
+
 fi

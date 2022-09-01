@@ -1,4 +1,4 @@
-reimport argparse, os, sys, glob, re
+import argparse, os, sys, glob, re
 
 from frontend.frontend import draw_gradio_ui
 from frontend.ui_functions import resize_image
@@ -33,6 +33,7 @@ parser.add_argument("--gfpgan-cpu", action='store_true', help="run GFPGAN on cpu
 parser.add_argument("--esrgan-gpu", type=int, help="run ESRGAN on specific gpu (overrides --gpu)", default=0)
 parser.add_argument("--gfpgan-gpu", type=int, help="run GFPGAN on specific gpu (overrides --gpu) ", default=0)
 parser.add_argument("--cli", type=str, help="don't launch web server, take Python function kwargs from this file.", default=None)
+parser.add_argument("--port", type=int, help="port to run webserver on", default=7860)
 opt = parser.parse_args()
 
 #Should not be needed anymore
@@ -1594,7 +1595,8 @@ class ServerLauncher(threading.Thread):
         gradio_params = {
             'show_error': True, 
             'server_name': '0.0.0.0', 
-            'share': opt.share
+            'share': opt.share,
+            'server_port': opt.port
         }
         if not opt.share:
             demo.queue(concurrency_count=1)

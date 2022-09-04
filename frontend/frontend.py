@@ -105,7 +105,7 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                     [txt2img_prompt, txt2img_steps, txt2img_sampling, txt2img_toggles, txt2img_realesrgan_model_name,
                      txt2img_ddim_eta, txt2img_batch_count, txt2img_batch_size, txt2img_cfg, txt2img_seed,
                      txt2img_height, txt2img_width, txt2img_embeddings, txt2img_variant_amount, txt2img_variant_seed],
-                    [output_txt2img_gallery, output_txt2img_seed, output_txt2img_params, output_txt2img_stats]
+                    [output_txt2img_gallery, output_txt2img_seed, output_txt2img_params, output_txt2img_stats], api_name="txt2img"
                 )
                 txt2img_prompt.submit(
                     txt2img,
@@ -273,7 +273,7 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                      img2img_realesrgan_model_name, img2img_batch_count, img2img_batch_size, img2img_cfg,
                      img2img_denoising, img2img_seed, img2img_height, img2img_width, img2img_resize,
                      img2img_embeddings],
-                    [output_img2img_gallery, output_img2img_seed, output_img2img_params, output_img2img_stats]
+                    [output_img2img_gallery, output_img2img_seed, output_img2img_params, output_img2img_stats], api_name="img2img"
                 )
                 def img2img_submit_params():
                     return (img2img,
@@ -315,7 +315,7 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                     gfpgan_btn.click(
                         run_GFPGAN,
                         [gfpgan_source, gfpgan_strength],
-                        [gfpgan_output]
+                        [gfpgan_output], api_name="gfpgan"
                     )
             if RealESRGAN is not None:
                 with gr.TabItem("RealESRGAN", id='realesrgan_tab'):
@@ -332,7 +332,7 @@ def draw_gradio_ui(opt, img2img=lambda x: x, txt2img=lambda x: x, txt2img_defaul
                     realesrgan_btn.click(
                         run_RealESRGAN,
                         [realesrgan_source, realesrgan_model_name],
-                        [realesrgan_output]
+                        [realesrgan_output], api_name="realesrgan"
                     )
                 output_txt2img_to_upscale_esrgan.click(
                     uifn.copy_img_to_upscale_esrgan,

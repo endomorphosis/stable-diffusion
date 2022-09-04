@@ -4,6 +4,10 @@ channels:
   - defaults
 dependencies:
   - git
+<<<<<<< HEAD
+  - nodejs
+=======
+>>>>>>> bbece2f6973ee776350a05c956d80e35cf6bc0f0
   - python=3.8.5
   - pip=20.3
   - cudatoolkit=11.3
